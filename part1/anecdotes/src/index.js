@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 const App = props => {
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 });
 
   const generateNewAnecdoteReference = () => {
     let generatedValue;
@@ -10,9 +11,19 @@ const App = props => {
     setSelected(generatedValue);
   };
 
+  const voteForAnecdote = selected => {
+    let newVotes = { ...votes };
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+  };
+
   return (
     <div>
       <p>{props.anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
+      <button onClick={() => voteForAnecdote(selected)}>
+        vote for this anecdote
+      </button>
       <button onClick={() => generateNewAnecdoteReference()}>
         next anecdote
       </button>
