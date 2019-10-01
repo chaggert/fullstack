@@ -6,8 +6,7 @@ const App = props => {
   const [votes, setVotes] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 });
 
   const generateNewAnecdoteReference = () => {
-    let generatedValue;
-    generatedValue = Math.floor(Math.random() * anecdotes.length);
+    let generatedValue = Math.floor(Math.random() * anecdotes.length);
     setSelected(generatedValue);
   };
 
@@ -18,11 +17,7 @@ const App = props => {
   };
 
   const anecdoteIndexWithTheMostVotes = () => {
-    let mostVoted = Object.keys(votes).reduce((a, b) =>
-      votes[a] > votes[b] ? a : b
-    );
-    console.log(mostVoted);
-    return mostVoted;
+    return Object.keys(votes).reduce((a, b) => (votes[a] > votes[b] ? a : b));
   };
 
   return (
