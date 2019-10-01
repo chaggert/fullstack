@@ -7,20 +7,22 @@ const Statistics = ({ good, neutral, bad }) => {
   let stats;
   if (good + neutral + bad !== 0) {
     stats = (
-      <div>
-        <Statistic name="good" value={good} />
-        <Statistic name="neutral" value={neutral} />
-        <Statistic name="bad" value={bad} />
-        <Statistic name="all" value={good + neutral + bad} />
-        <Statistic
-          name="average"
-          value={(1 * good - 1 * bad) / (good + neutral + bad)}
-        />
-        <Statistic
-          name="% positive"
-          value={(100 * good) / (good + neutral + bad)}
-        />
-      </div>
+      <table>
+        <tbody>
+          <Statistic name="good" value={good} />
+          <Statistic name="neutral" value={neutral} />
+          <Statistic name="bad" value={bad} />
+          <Statistic name="all" value={good + neutral + bad} />
+          <Statistic
+            name="average"
+            value={(1 * good - 1 * bad) / (good + neutral + bad)}
+          />
+          <Statistic
+            name="% positive"
+            value={(100 * good) / (good + neutral + bad)}
+          />
+        </tbody>
+      </table>
     );
   } else {
     stats = <p>No feedback given</p>;

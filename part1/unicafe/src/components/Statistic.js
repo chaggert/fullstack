@@ -2,11 +2,10 @@ import React from "react";
 
 const Statistic = props => {
   return (
-    <div>
-      <p>
-        {props.name} {props.value}
-      </p>
-    </div>
+    <tr>
+      <td>{props.name}</td>
+      <td>{props.value}</td>
+    </tr>
   );
 };
 
