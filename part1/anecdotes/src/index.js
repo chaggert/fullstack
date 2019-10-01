@@ -17,8 +17,17 @@ const App = props => {
     setVotes(newVotes);
   };
 
+  const anecdoteIndexWithTheMostVotes = () => {
+    let mostVoted = Object.keys(votes).reduce((a, b) =>
+      votes[a] > votes[b] ? a : b
+    );
+    console.log(mostVoted);
+    return mostVoted;
+  };
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <button onClick={() => voteForAnecdote(selected)}>
@@ -27,6 +36,8 @@ const App = props => {
       <button onClick={() => generateNewAnecdoteReference()}>
         next anecdote
       </button>
+      <h1>Anecdote with the most votes</h1>
+      <p>{props.anecdotes[anecdoteIndexWithTheMostVotes()]}</p>
     </div>
   );
 };
