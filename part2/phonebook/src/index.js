@@ -10,11 +10,15 @@ const App = () => {
 
   const addContact = event => {
     event.preventDefault();
-    const contactObject = {
-      name: newName
-    };
-    setPersons(persons.concat(contactObject));
-    setNewName("");
+    if (persons.filter(person => person.name === newName).length > 0) {
+      window.alert(`${newName} is already added to phonebook`);
+    } else {
+      const contactObject = {
+        name: newName
+      };
+      setPersons(persons.concat(contactObject));
+      setNewName("");
+    }
   };
 
   const handleContactChange = event => {
