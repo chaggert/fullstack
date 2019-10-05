@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import Search from "./components/Search";
-import Countries from "./components/Countries";
+import Country from "./components/Country";
 
 const App = () => {
   const [countries, setCountries] = useState([]);
@@ -18,14 +18,37 @@ const App = () => {
     setFilter(event.target.value);
   };
 
-  const generatedCountries = filter => {
-    return countries.filter(country => country.name.includes(filter));
+  const showCountry = country => {
+    setFilter(country.name);
+  };
+
+  const generateCountries = filter => {
+    let showingCountries = countries.filter(country =>
+      country.name.includes(filter)
+    );
+
+    if (showingCountries.length > 10) {
+      return <p>Please start typing a country...</p>;
+    } else if (showingCountries.length === 1) {
+      return showingCountries.map(country => (
+        <Country key={country.name} country={country} detail={true} />
+      ));
+    } else {
+      return showingCountries.map(country => (
+        <Country
+          key={country.name}
+          country={country}
+          detail={false}
+          formSubmitHandler={showCountry}
+        />
+      ));
+    }
   };
 
   return (
     <div>
       <Search filter={filter} filterChangeHandler={handleFilterChange} />
-      <Countries genCountries={generatedCountries(filter)} />
+      {generateCountries(filter)}
     </div>
   );
 };
