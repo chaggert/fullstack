@@ -45,14 +45,16 @@ const App = () => {
   };
 
   const removeContact = id => {
-    personService
-      .remove(id)
-      .then(() => {
-        setPersons(persons.filter(person => person.id !== id));
-      })
-      .catch(error => {
-        alert(`The contact could not be deleted.`);
-      });
+    if (window.confirm("Are you sure you wish to remove this contact?")) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id));
+        })
+        .catch(error => {
+          alert(`The contact could not be deleted.`);
+        });
+    }
   };
 
   const handleContactChange = event => {
