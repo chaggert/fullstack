@@ -12,14 +12,23 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
-  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState({
+    message: null,
+    type: null
+  });
 
   useEffect(() => {
     personService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
       .catch(error => {
-        alert("Could not retrieve contacts. Please try again.");
+        setNotificationMessage({
+          message: "Could not retrieve contacts. Please try again.",
+          type: "error"
+        });
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 2000);
       });
   }, []);
 
@@ -37,9 +46,12 @@ const App = () => {
           personService
             .update(contact.id, changedContact)
             .then(returnedPerson => {
-              setNotificationMessage(`Note '${newName}' has been updated.`);
+              setNotificationMessage({
+                message: `Note '${newName}' has been updated.`,
+                type: "success"
+              });
               setTimeout(() => {
-                setNotificationMessage(null);
+                setNotificationMessage({ message: null, type: null });
               }, 2000);
               setPersons(
                 persons.map(p => (p.name !== newName ? p : returnedPerson))
@@ -48,9 +60,14 @@ const App = () => {
               setNewNumber("");
             })
             .catch(error => {
-              alert(
-                `This contact cannot be updated. It may have been deleted.`
-              );
+              setNotificationMessage({
+                message:
+                  "This contact could not be updated. It may have been removed.",
+                type: "error"
+              });
+              setTimeout(() => {
+                setNotificationMessage({ message: null, type: null });
+              }, 2000);
             });
         }
       } else {
@@ -64,18 +81,26 @@ const App = () => {
       personService
         .create(contactObject)
         .then(returnedPerson => {
-          setNotificationMessage(`${newName} has been added to phonebook.`);
+          setNotificationMessage({
+            message: `${newName} has been added to phonebook.`,
+            type: "success"
+          });
           setTimeout(() => {
-            setNotificationMessage(null);
+            setNotificationMessage({ message: null, type: null });
           }, 2000);
           setPersons(persons.concat(returnedPerson));
           setNewName("");
           setNewNumber("");
         })
         .catch(error => {
-          alert(
-            `${newName} could not be added. Maybe because they already exist`
-          );
+          setNotificationMessage({
+            message:
+              "This contact could not be added. MAybe because they already exist.",
+            type: "error"
+          });
+          setTimeout(() => {
+            setNotificationMessage({ message: null, type: null });
+          }, 2000);
         });
     }
   };
@@ -85,14 +110,23 @@ const App = () => {
       personService
         .remove(id)
         .then(() => {
-          setNotificationMessage(`Contact has been removed.`);
+          setNotificationMessage({
+            message: `Contact has been removed.`,
+            type: "success"
+          });
           setTimeout(() => {
-            setNotificationMessage(null);
+            setNotificationMessage({ message: null, type: null });
           }, 2000);
           setPersons(persons.filter(person => person.id !== id));
         })
         .catch(error => {
-          alert(`The contact could not be deleted.`);
+          setNotificationMessage({
+            message: "This contact could not be deleted",
+            type: "error"
+          });
+          setTimeout(() => {
+            setNotificationMessage({ message: null, type: null });
+          }, 2000);
         });
     }
   };
@@ -112,8 +146,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {notificationMessage != null ? (
-        <Notification message={notificationMessage} />
+      {notificationMessage.message != null ? (
+        <Notification
+          message={notificationMessage.message}
+          type={notificationMessage.type}
+        />
       ) : null}
       <Search filter={filter} filterChangeHandler={handleFilterChange} />
       <h2>Add New Contact</h2>
