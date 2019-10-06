@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
+import "./index.css";
 import ContactForm from "./components/ContactForm";
 import Contacts from "./components/Contacts";
 import Search from "./components/Search";
 import personService from "./services/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personService
@@ -34,6 +37,10 @@ const App = () => {
           personService
             .update(contact.id, changedContact)
             .then(returnedPerson => {
+              setNotificationMessage(`Note '${newName}' has been updated.`);
+              setTimeout(() => {
+                setNotificationMessage(null);
+              }, 2000);
               setPersons(
                 persons.map(p => (p.name !== newName ? p : returnedPerson))
               );
@@ -47,7 +54,7 @@ const App = () => {
             });
         }
       } else {
-        window.alert(`${newName} is already added to phonebook`);
+        window.alert(`${newName} is already added to phonebook.`);
       }
     } else {
       const contactObject = {
@@ -57,6 +64,10 @@ const App = () => {
       personService
         .create(contactObject)
         .then(returnedPerson => {
+          setNotificationMessage(`${newName} has been added to phonebook.`);
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 2000);
           setPersons(persons.concat(returnedPerson));
           setNewName("");
           setNewNumber("");
@@ -74,6 +85,10 @@ const App = () => {
       personService
         .remove(id)
         .then(() => {
+          setNotificationMessage(`Contact has been removed.`);
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 2000);
           setPersons(persons.filter(person => person.id !== id));
         })
         .catch(error => {
@@ -97,6 +112,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {notificationMessage != null ? (
+        <Notification message={notificationMessage} />
+      ) : null}
       <Search filter={filter} filterChangeHandler={handleFilterChange} />
       <h2>Add New Contact</h2>
       <ContactForm
@@ -106,6 +124,7 @@ const App = () => {
         numberChangeHandler={handleNumberChange}
         formSubmitHandler={addOrUpdateContact}
       />
+
       <h2>Numbers</h2>
       <Contacts
         persons={persons}
