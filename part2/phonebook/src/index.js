@@ -20,10 +20,35 @@ const App = () => {
       });
   }, []);
 
-  const addContact = event => {
+  const addOrUpdateContact = event => {
     event.preventDefault();
     if (persons.filter(person => person.name === newName).length > 0) {
-      window.alert(`${newName} is already added to phonebook`);
+      if (persons.filter(person => person.number !== newNumber).length > 0) {
+        if (
+          window.confirm(
+            `${newName} is already added to phonebook. Would you like to change their contact number to ${newNumber}`
+          )
+        ) {
+          const contact = persons.find(p => p.name === newName);
+          const changedContact = { ...contact, number: newNumber };
+          personService
+            .update(contact.id, changedContact)
+            .then(returnedPerson => {
+              setPersons(
+                persons.map(p => (p.name !== newName ? p : returnedPerson))
+              );
+              setNewName("");
+              setNewNumber("");
+            })
+            .catch(error => {
+              alert(
+                `This contact cannot be updated. It may have been deleted.`
+              );
+            });
+        }
+      } else {
+        window.alert(`${newName} is already added to phonebook`);
+      }
     } else {
       const contactObject = {
         name: newName,
@@ -79,7 +104,7 @@ const App = () => {
         nameChangeHandler={handleContactChange}
         number={newNumber}
         numberChangeHandler={handleNumberChange}
-        formSubmitHandler={addContact}
+        formSubmitHandler={addOrUpdateContact}
       />
       <h2>Numbers</h2>
       <Contacts
