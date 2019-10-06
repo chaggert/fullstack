@@ -6,7 +6,10 @@ const Contacts = props => {
       .filter(person => person.name.includes(contactFilter))
       .map(person => (
         <p key={person.name}>
-          {person.name} {person.number}
+          {person.name} {person.number}{" "}
+          <button onClick={() => props.contactDeleteHandler(person.id)}>
+            delete
+          </button>
         </p>
       ));
 

@@ -44,6 +44,17 @@ const App = () => {
     }
   };
 
+  const removeContact = id => {
+    personService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+      })
+      .catch(error => {
+        alert(`The contact could not be deleted.`);
+      });
+  };
+
   const handleContactChange = event => {
     setNewName(event.target.value);
   };
@@ -69,7 +80,11 @@ const App = () => {
         formSubmitHandler={addContact}
       />
       <h2>Numbers</h2>
-      <Contacts persons={persons} filter={filter} />
+      <Contacts
+        persons={persons}
+        filter={filter}
+        contactDeleteHandler={removeContact}
+      />
     </div>
   );
 };
