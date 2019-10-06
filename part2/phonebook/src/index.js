@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
 import ContactForm from "./components/ContactForm";
 import Contacts from "./components/Contacts";
 import Search from "./components/Search";
+import personService from "./services/Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,9 +12,12 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(response => {
-      setPersons(response.data);
-    });
+    personService
+      .getAll()
+      .then(initialPersons => setPersons(initialPersons))
+      .catch(error => {
+        alert("Could not retrieve contacts. Please try again.");
+      });
   }, []);
 
   const addContact = event => {
@@ -26,13 +29,17 @@ const App = () => {
         name: newName,
         number: newNumber
       };
-      axios
-        .post("http://localhost:3001/persons", contactObject)
-        .then(response => {
-          setPersons(persons.concat(contactObject));
+      personService
+        .create(contactObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
           setNewName("");
           setNewNumber("");
-          console.log(response);
+        })
+        .catch(error => {
+          alert(
+            `${newName} could not be added. Maybe because they already exist`
+          );
         });
     }
   };
