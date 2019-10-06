@@ -1,4 +1,5 @@
 import React from "react";
+import Weather from "../services/Weather";
 
 const Country = ({ country, detail, formSubmitHandler }) => {
   const languages = langs => {
@@ -24,6 +25,7 @@ const Country = ({ country, detail, formSubmitHandler }) => {
         {languages(country.languages)}
       </p>
       <img alt="" src={country.flag} />
+      <Weather city={country.capital} />
     </div>
   );
 };
