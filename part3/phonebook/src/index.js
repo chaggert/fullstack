@@ -27,7 +27,7 @@ const App = () => {
           type: "error"
         });
         setTimeout(() => {
-          setNotificationMessage({ message: null, type: null };
+          setNotificationMessage({ message: null, type: null });
         }, 2000);
       });
   }, []);
