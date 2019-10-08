@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const url = process.env.MONGODB_URI;
 
@@ -14,8 +15,16 @@ mongoose
   });
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String
+  name: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  number: {
+    type: String,
+    unique: true,
+    required: true
+  }
 });
 
 personSchema.set("toJSON", {
@@ -24,6 +33,9 @@ personSchema.set("toJSON", {
     delete returnedObject._id;
     delete returnedObject.__v;
   }
+});
+personSchema.plugin(uniqueValidator, {
+  message: "Error, both name and number must be unque"
 });
 
 module.exports = mongoose.model("Person", personSchema);
