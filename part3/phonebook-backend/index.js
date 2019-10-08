@@ -51,23 +51,6 @@ let persons = [
     id: 4
   }
 ];
-// const MONGO_PASSWORD = "imCpbz0c3VRq0OVY";
-// const url = `mongodb+srv://admin:${MONGO_PASSWORD}@cluster0-dgqxo.mongodb.net/fullstack-phonebook?retryWrites=true&w=majority`;
-
-// mongoose.connect(url, { useNewUrlParser: true });
-
-// const personSchema = new mongoose.Schema({
-//   name: String,
-//   number: String
-// });
-// personSchema.set("toJSON", {
-//   transform: (document, returnedObject) => {
-//     returnedObject.id = returnedObject._id.toString();
-//     delete returnedObject._id;
-//     delete returnedObject.__v;
-//   }
-// });
-// const Person = mongoose.model("Person", personSchema);
 
 app.get("/api/persons", (req, res) => {
   Person.find({}).then(persons => {
@@ -94,11 +77,6 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
-const generateId = () => {
-  const newId = Math.floor(Math.random() * 1000000);
-  return newId;
-};
-
 app.post("/api/persons", (request, response) => {
   const body = request.body;
   if (!body.name || !body.number) {
@@ -106,20 +84,20 @@ app.post("/api/persons", (request, response) => {
       error:
         "please make sure you've entered both a name and number for the new person"
     });
-  } else if (persons.find(person => person.name === body.name)) {
+  } else if (Person.find({ name: body.name }).length) {
     return response.status(400).json({
       error: "person already exists"
     });
   }
-
-  const person = {
+  console.log(body.name);
+  const person = new Person({
     name: body.name,
-    number: body.number,
-    id: generateId()
-  };
+    number: body.number
+  });
 
-  persons = persons.concat(person);
-  response.json(person);
+  person.save().then(savedPerson => {
+    response.json(savedPerson.toJSON());
+  });
 });
 
 app.delete("/api/persons/:id", (request, response) => {
