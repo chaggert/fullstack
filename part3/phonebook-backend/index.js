@@ -1,8 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const app = express();
 const bodyParser = require("body-parser");
+//const mongoose = require("mongoose");
+const Person = require("./models/person");
+const app = express();
 
 app.use(bodyParser.json());
 morgan.token("requestBodyContent", function(req, res) {
@@ -48,9 +51,28 @@ let persons = [
     id: 4
   }
 ];
+// const MONGO_PASSWORD = "imCpbz0c3VRq0OVY";
+// const url = `mongodb+srv://admin:${MONGO_PASSWORD}@cluster0-dgqxo.mongodb.net/fullstack-phonebook?retryWrites=true&w=majority`;
+
+// mongoose.connect(url, { useNewUrlParser: true });
+
+// const personSchema = new mongoose.Schema({
+//   name: String,
+//   number: String
+// });
+// personSchema.set("toJSON", {
+//   transform: (document, returnedObject) => {
+//     returnedObject.id = returnedObject._id.toString();
+//     delete returnedObject._id;
+//     delete returnedObject.__v;
+//   }
+// });
+// const Person = mongoose.model("Person", personSchema);
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then(persons => {
+    res.json(persons.map(person => person.toJSON()));
+  });
 });
 
 app.get("/info", (req, res) => {
@@ -107,7 +129,7 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
