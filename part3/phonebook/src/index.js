@@ -94,8 +94,7 @@ const App = () => {
         })
         .catch(error => {
           setNotificationMessage({
-            message:
-              "This contact could not be added. MAybe because they already exist.",
+            message: error.response.data.error,
             type: "error"
           });
           setTimeout(() => {

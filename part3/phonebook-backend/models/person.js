@@ -3,6 +3,8 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 const url = process.env.MONGODB_URI;
 
+mongoose.set("useFindAndModify", false);
+
 console.log("connecting to", url);
 
 mongoose
@@ -18,12 +20,14 @@ const personSchema = new mongoose.Schema({
   name: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    minlength: 3
   },
   number: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    minlength: 8
   }
 });
 

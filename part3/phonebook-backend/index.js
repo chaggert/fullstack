@@ -28,15 +28,6 @@ app.use(
 );
 app.use(cors());
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
-  if (error.name === "CastError" && error.kind === "ObjectId") {
-    return response.status(400).send({ error: "malformatted id" });
-  }
-  next(error);
-};
-app.use(errorHandler);
-
 app.get("/api/persons", (req, res, next) => {
   Person.find({})
     .then(persons => {
@@ -65,22 +56,11 @@ app.get("/api/persons/:id", (request, response, next) => {
 
 app.post("/api/persons", (request, response, next) => {
   const body = request.body;
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error:
-        "please make sure you've entered both a name and number for the new person"
-    });
-  } else if (Person.find({ name: body.name }).length) {
-    return response.status(400).json({
-      error: "person already exists"
-    });
-  }
-  console.log(body.name);
+
   const person = new Person({
     name: body.name,
     number: body.number
   });
-
   person
     .save()
     .then(savedPerson => {
@@ -110,6 +90,17 @@ app.delete("/api/persons/:id", (request, response, next) => {
     })
     .catch(error => next(error));
 });
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+  if (error.name === "CastError" && error.kind === "ObjectId") {
+    return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).send({ error: error.message });
+  }
+  next(error);
+};
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
