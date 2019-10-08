@@ -3,10 +3,10 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-//const mongoose = require("mongoose");
 const Person = require("./models/person");
 const app = express();
 
+app.use(express.static("build"));
 app.use(bodyParser.json());
 morgan.token("requestBodyContent", function(req, res) {
   return JSON.stringify(req.body);
@@ -27,7 +27,6 @@ app.use(
   })
 );
 app.use(cors());
-app.use(express.static("build"));
 
 let persons = [
   {
@@ -52,10 +51,24 @@ let persons = [
   }
 ];
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError" && error.kind === "ObjectId") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
+
 app.get("/api/persons", (req, res) => {
-  Person.find({}).then(persons => {
-    res.json(persons.map(person => person.toJSON()));
-  });
+  Person.find({})
+    .then(persons => {
+      res.json(persons.map(person => person.toJSON()));
+    })
+    .catch(error => next(error));
 });
 
 app.get("/info", (req, res) => {
@@ -95,9 +108,12 @@ app.post("/api/persons", (request, response) => {
     number: body.number
   });
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson.toJSON());
-  });
+  person
+    .save()
+    .then(savedPerson => {
+      response.json(savedPerson.toJSON());
+    })
+    .catch(error => next(error));
 });
 
 app.delete("/api/persons/:id", (request, response, next) => {
