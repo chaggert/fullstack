@@ -23,7 +23,7 @@ const App = () => {
       .then(initialPersons => setPersons(initialPersons))
       .catch(error => {
         setNotificationMessage({
-          message: "Could not retrieve contacts. Please try again.",
+          message: "Could not retrieve contacts. Please try again later.",
           type: "error"
         });
         setTimeout(() => {

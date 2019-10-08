@@ -8,7 +8,7 @@ if (process.argv.length < 3) {
 }
 
 if (process.argv.length === 4) {
-  console.log("please ensure both name and password have been provided");
+  console.log("please ensure that name and password have been provided");
   process.exit(1);
 }
 
