@@ -49,9 +49,40 @@ const mostBlogs = blogs => {
       );
 };
 
+const mostLikedAuthor = blogs => {
+  let likeCountArray = [];
+  for (const blog of blogs) {
+    if (
+      likeCountArray.filter(
+        likeCountObject => likeCountObject.author === blog.author
+      ).length > 0
+    ) {
+      likeCountArray
+        .filter(likeCountObject => likeCountObject.author === blog.author)
+        .map(likeCountObject => {
+          likeCountObject.likes = likeCountObject.likes + blog.likes;
+        });
+    } else {
+      likeCountArray.push({ author: blog.author, likes: blog.likes });
+    }
+  }
+  const maxLikesReducer = (maxLikes, item) => {
+    return Math.max(maxLikes, item.likes);
+  };
+
+  const maxLikes = likeCountArray.reduce(maxLikesReducer, 0);
+
+  return blogs.length === 0
+    ? null
+    : likeCountArray.filter(
+        likeCountObject => likeCountObject.likes === maxLikes
+      );
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favouriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikedAuthor
 };
