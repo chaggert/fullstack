@@ -19,8 +19,39 @@ const favouriteBlog = blogs => {
     : blogs.filter(blog => blog.likes === maxLikes);
 };
 
+const mostBlogs = blogs => {
+  let blogCountArray = [];
+  for (const blog of blogs) {
+    if (
+      blogCountArray.filter(
+        blogCountObject => blogCountObject.author === blog.author
+      ).length > 0
+    ) {
+      blogCountArray
+        .filter(blogCountObject => blogCountObject.author === blog.author)
+        .map(blogCountObject => {
+          blogCountObject.numBlogs = blogCountObject.numBlogs + 1;
+        });
+    } else {
+      blogCountArray.push({ author: blog.author, numBlogs: 1 });
+    }
+  }
+  const maxNumBlogsReducer = (maxNumBlogs, item) => {
+    return Math.max(maxNumBlogs, item.numBlogs);
+  };
+
+  const maxNumBlogs = blogCountArray.reduce(maxNumBlogsReducer, 0);
+
+  return blogs.length === 0
+    ? null
+    : blogCountArray.filter(
+        blogCountObject => blogCountObject.numBlogs === maxNumBlogs
+      );
+};
+
 module.exports = {
   dummy,
   totalLikes,
-  favouriteBlog
+  favouriteBlog,
+  mostBlogs
 };

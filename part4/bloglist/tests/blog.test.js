@@ -1,4 +1,9 @@
-const { dummy, totalLikes, favouriteBlog } = require("../utils/list_helper");
+const {
+  dummy,
+  totalLikes,
+  favouriteBlog,
+  mostBlogs
+} = require("../utils/list_helper");
 
 const listWithOneBlog = [
   {
@@ -117,6 +122,31 @@ describe("favourite blog", () => {
   });
   test("when the list has 0 blogs", () => {
     const result = favouriteBlog([]);
+    expect(result).toEqual(null);
+  });
+});
+
+describe("most blogs", () => {
+  test("when list has only one blog equals the likes of that", () => {
+    const result = mostBlogs(listWithOneBlog);
+    expect(result).toEqual([
+      {
+        author: "Edsger W. Dijkstra",
+        numBlogs: 1
+      }
+    ]);
+  });
+  test("when the list has multiple blogs", () => {
+    const result = mostBlogs(listWithMultipleBlogs);
+    expect(result).toEqual([
+      {
+        author: "Robert C. Martin",
+        numBlogs: 3
+      }
+    ]);
+  });
+  test("when the list has 0 blogs", () => {
+    const result = mostBlogs([]);
     expect(result).toEqual(null);
   });
 });
