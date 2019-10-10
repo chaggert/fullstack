@@ -85,6 +85,20 @@ test("a valid blog can be added ", async () => {
   expect(titles).toContain("newly added blog");
 });
 
+test("a new blog post defaults to 0 likes", async () => {
+  const newBlog = {
+    title: "newly added blog",
+    author: "Writy Writerson",
+    url: "www.url-here.com"
+  };
+  const response = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+  expect(response.body.likes).toEqual(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
