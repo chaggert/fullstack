@@ -51,34 +51,39 @@ test("all blogs are returned", async () => {
   expect(response.body.length).toBe(initialBlogs.length);
 });
 
-test("a specific blog is within the returned blogs", async () => {
+test("id property is named id", async () => {
   const response = await api.get("/api/blogs");
-
-  const titles = response.body.map(r => r.title);
-  expect(titles).toContain("Bloggy blog");
+  expect(response.body[0].id).toBeDefined();
 });
 
-test("a valid blog can be added ", async () => {
-  const newBlog = {
-    title: "newly added blog",
-    author: "Alpaca Lamb",
-    url: "www.url-here.com",
-    likes: 2
-  };
+// test("a specific blog is within the returned blogs", async () => {
+//   const response = await api.get("/api/blogs");
 
-  await api
-    .post("/api/blogs")
-    .send(newBlog)
-    .expect(200)
-    .expect("Content-Type", /application\/json/);
+//   const titles = response.body.map(r => r.title);
+//   expect(titles).toContain("Bloggy blog");
+// });
 
-  const response = await api.get("/api/blogs");
+// test("a valid blog can be added ", async () => {
+//   const newBlog = {
+//     title: "newly added blog",
+//     author: "Alpaca Lamb",
+//     url: "www.url-here.com",
+//     likes: 2
+//   };
 
-  const titles = response.body.map(r => r.title);
+//   await api
+//     .post("/api/blogs")
+//     .send(newBlog)
+//     .expect(200)
+//     .expect("Content-Type", /application\/json/);
 
-  expect(response.body.length).toBe(initialBlogs.length + 1);
-  expect(titles).toContain("newly added blog");
-});
+//   const response = await api.get("/api/blogs");
+
+//   const titles = response.body.map(r => r.title);
+
+//   expect(response.body.length).toBe(initialBlogs.length + 1);
+//   expect(titles).toContain("newly added blog");
+// });
 
 afterAll(() => {
   mongoose.connection.close();
