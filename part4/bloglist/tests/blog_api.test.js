@@ -56,13 +56,6 @@ test("id property is named id", async () => {
   expect(response.body[0].id).toBeDefined();
 });
 
-// test("a specific blog is within the returned blogs", async () => {
-//   const response = await api.get("/api/blogs");
-
-//   const titles = response.body.map(r => r.title);
-//   expect(titles).toContain("Bloggy blog");
-// });
-
 test("a valid blog can be added ", async () => {
   const newBlog = {
     title: "newly added blog",
@@ -97,6 +90,25 @@ test("a new blog post defaults to 0 likes", async () => {
     .expect(200)
     .expect("Content-Type", /application\/json/);
   expect(response.body.likes).toEqual(0);
+});
+
+test("a new blog cannot be created without a title or url", async () => {
+  const newBlogNoTitle = {
+    author: "Writy Writerson",
+    url: "www.url-here.com"
+  };
+  await api
+    .post("/api/blogs")
+    .send(newBlogNoTitle)
+    .expect(400);
+  const newBlogNoUrl = {
+    title: "Writy Writersons Blog",
+    author: "Writy Writerson"
+  };
+  await api
+    .post("/api/blogs")
+    .send(newBlogNoUrl)
+    .expect(400);
 });
 
 afterAll(() => {
