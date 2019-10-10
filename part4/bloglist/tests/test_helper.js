@@ -22,6 +22,21 @@ const initialBlogs = [
   }
 ];
 
+// const initialUsers = [
+//   {
+//     blogs: [],
+//     username: "chaggert",
+//     name: "First Last",
+//     id: "5d9f48e7e4ebf7371ccd0a1f"
+//   },
+//   {
+//     blogs: [],
+//     username: "myusername",
+//     name: "Person X",
+//     id: "5d9f4965e4ebf7371ccd0a20"
+//   }
+// ];
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map(blog => blog.toJSON());

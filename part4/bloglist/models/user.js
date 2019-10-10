@@ -9,9 +9,7 @@ const userSchema = mongoose.Schema({
   },
   name: String,
   passwordHash: {
-    type: String,
-    required: true,
-    minlength: 3
+    type: String
   },
   blogs: [
     {
@@ -20,6 +18,8 @@ const userSchema = mongoose.Schema({
     }
   ]
 });
+
+userSchema.plugin(uniqueValidator);
 
 userSchema.set("toJSON", {
   transform: (document, returnedObject) => {
@@ -30,8 +30,6 @@ userSchema.set("toJSON", {
     delete returnedObject.passwordHash;
   }
 });
-
-userSchema.plugin(uniqueValidator);
 
 const User = mongoose.model("User", userSchema);
 

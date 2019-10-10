@@ -1,3 +1,9 @@
+const mongoose = require("mongoose");
+const supertest = require("supertest");
+const helper = require("./test_helper");
+const app = require("../app");
+
+const api = supertest(app);
 const User = require("../models/user");
 
 describe("when there is initially one user at db", () => {
@@ -29,24 +35,46 @@ describe("when there is initially one user at db", () => {
     expect(usernames).toContain(newUser.username);
   });
 
-  test("creation fails with proper statuscode and message if username already taken", async () => {
+  test("creation fails with proper statuscode and message if username or password is too short", async () => {
     const usersAtStart = await helper.usersInDb();
 
-    const newUser = {
-      username: "root",
+    const newUserShortUsername = {
+      username: "ro",
       name: "Superuser",
       password: "salainen"
     };
 
-    const result = await api
+    const resultShortUsername = await api
       .post("/api/users")
-      .send(newUser)
+      .send(newUserShortUsername)
       .expect(400)
       .expect("Content-Type", /application\/json/);
 
-    expect(result.body.error).toContain("`username` to be unique");
+    expect(resultShortUsername.body.error).toContain(
+      "is shorter than the minimum allowed length (3)."
+    );
+
+    const newUserShortPassword = {
+      username: "super123",
+      name: "Superuser",
+      password: "sa"
+    };
+
+    const resultShortPassword = await api
+      .post("/api/users")
+      .send(newUserShortPassword)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(resultShortPassword.body.error).toContain(
+      "Password must be at least 3 characters"
+    );
 
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd.length).toBe(usersAtStart.length);
   });
+});
+
+afterAll(() => {
+  mongoose.connection.close();
 });
