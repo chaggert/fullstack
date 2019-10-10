@@ -63,27 +63,27 @@ test("id property is named id", async () => {
 //   expect(titles).toContain("Bloggy blog");
 // });
 
-// test("a valid blog can be added ", async () => {
-//   const newBlog = {
-//     title: "newly added blog",
-//     author: "Alpaca Lamb",
-//     url: "www.url-here.com",
-//     likes: 2
-//   };
+test("a valid blog can be added ", async () => {
+  const newBlog = {
+    title: "newly added blog",
+    author: "Writy Writerson",
+    url: "www.url-here.com",
+    likes: 2
+  };
 
-//   await api
-//     .post("/api/blogs")
-//     .send(newBlog)
-//     .expect(200)
-//     .expect("Content-Type", /application\/json/);
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
 
-//   const response = await api.get("/api/blogs");
+  const response = await api.get("/api/blogs");
 
-//   const titles = response.body.map(r => r.title);
+  const titles = response.body.map(r => r.title);
 
-//   expect(response.body.length).toBe(initialBlogs.length + 1);
-//   expect(titles).toContain("newly added blog");
-// });
+  expect(response.body.length).toBe(initialBlogs.length + 1);
+  expect(titles).toContain("newly added blog");
+});
 
 afterAll(() => {
   mongoose.connection.close();
