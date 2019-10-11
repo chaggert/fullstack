@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 // import logo from './logo.svg';
-// import './App.css';
+import "./app.css";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Blog from "./components/Blog";
 import Login from "./components/Login";
 import BlogForm from "./components/BlogForm";
+import Notification from "./components/Notification";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -16,6 +17,10 @@ function App() {
     title: "",
     author: "",
     url: ""
+  });
+  const [notification, setNotification] = useState({
+    message: null,
+    type: null
   });
 
   useEffect(() => {
@@ -45,7 +50,13 @@ function App() {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      return exception;
+      setNotification({
+        message: `Could not login: ${exception.message}`,
+        type: "error"
+      });
+      setTimeout(() => {
+        setNotification({ message: null, type: null });
+      }, 2000);
     }
   };
 
@@ -75,19 +86,35 @@ function App() {
     event.preventDefault();
     try {
       const createdBlog = await blogService.create(newBlog);
+      setBlogs(blogs.concat(createdBlog));
       setNewBlog({
         title: "",
         author: "",
         url: ""
       });
-      console.log(`${createdBlog.title} was created`);
+      setNotification({
+        message: `New blog ${newBlog.title} successfully created!`,
+        type: "success"
+      });
+      setTimeout(() => {
+        setNotification({ message: null, type: null });
+      }, 2000);
     } catch (exception) {
-      return exception;
+      setNotification({
+        message: `Could not create blog: ${exception.message}`,
+        type: "error"
+      });
+      setTimeout(() => {
+        setNotification({ message: null, type: null });
+      }, 2000);
     }
   };
 
   return (
     <div>
+      {notification.message != null ? (
+        <Notification message={notification.message} type={notification.type} />
+      ) : null}
       {user === null ? (
         <Login
           username={username}
@@ -111,7 +138,7 @@ function App() {
             urlChangeHandler={handleUrlChange}
             blogCreateHandler={handleBlogCreate}
           />
-          <h2>blogs</h2>
+          <h2>Blogs</h2>
           {blogs.map(blog => (
             <Blog key={blog.id} blog={blog} />
           ))}
