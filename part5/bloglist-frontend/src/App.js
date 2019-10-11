@@ -6,18 +6,22 @@ import loginService from "./services/login";
 import Blog from "./components/Blog";
 
 function App() {
-  const [blogs, setBlogs] = useState("");
+  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(initialBlogs => setBlogs(initialBlogs))
-      .catch(error => {
-        console.log(error);
-      });
+    blogService.getAll().then(initialBlogs => setBlogs(initialBlogs));
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
   }, []);
 
   const handleLogin = async event => {
@@ -27,7 +31,9 @@ function App() {
         username,
         password
       });
+      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
 
+      //blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -39,6 +45,7 @@ function App() {
   const handleLogout = async event => {
     event.preventDefault();
     try {
+      window.localStorage.removeItem("loggedBlogappUser");
       setUser(null);
     } catch (exception) {
       return exception;
