@@ -18,6 +18,7 @@ function App() {
     author: "",
     url: ""
   });
+  const [createBlogVisible, setCreateBlogVisible] = useState(false);
   const [notification, setNotification] = useState({
     message: null,
     type: null
@@ -44,8 +45,6 @@ function App() {
         password
       });
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-
-      //blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -67,6 +66,19 @@ function App() {
       setUser(null);
     } catch (exception) {
       return exception;
+    }
+  };
+
+  const toggleBlogCreate = event => {
+    if (!createBlogVisible) {
+      setCreateBlogVisible(true);
+    } else {
+      setCreateBlogVisible(false);
+      setNewBlog({
+        title: "",
+        author: "",
+        url: ""
+      });
     }
   };
 
@@ -129,15 +141,22 @@ function App() {
             {user.name} is logged in{" "}
             <button onClick={handleLogout}>logout</button>
           </p>
-          <BlogForm
-            title={newBlog.title}
-            titleChangeHandler={handleTitleChange}
-            author={newBlog.author}
-            authorChangeHandler={handleAuthorChange}
-            url={newBlog.url}
-            urlChangeHandler={handleUrlChange}
-            blogCreateHandler={handleBlogCreate}
-          />
+          {createBlogVisible === true ? (
+            <div>
+              <BlogForm
+                title={newBlog.title}
+                titleChangeHandler={handleTitleChange}
+                author={newBlog.author}
+                authorChangeHandler={handleAuthorChange}
+                url={newBlog.url}
+                urlChangeHandler={handleUrlChange}
+                blogCreateHandler={handleBlogCreate}
+              />
+              <button onClick={toggleBlogCreate}>Cancel</button>
+            </div>
+          ) : (
+            <button onClick={toggleBlogCreate}>Create a new Blog</button>
+          )}
           <h2>Blogs</h2>
           {blogs.map(blog => (
             <Blog key={blog.id} blog={blog} />
