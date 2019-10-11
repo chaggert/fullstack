@@ -4,12 +4,19 @@ import React, { useState, useEffect } from "react";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Blog from "./components/Blog";
+import Login from "./components/Login";
+import BlogForm from "./components/BlogForm";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [newBlog, setNewBlog] = useState({
+    title: "",
+    author: "",
+    url: ""
+  });
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => setBlogs(initialBlogs));
@@ -52,44 +59,64 @@ function App() {
     }
   };
 
-  if (user === null) {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            username{" "}
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password{" "}
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    );
-  }
+  const handleTitleChange = event => {
+    setNewBlog({ ...newBlog, title: event.target.value });
+  };
+
+  const handleAuthorChange = event => {
+    setNewBlog({ ...newBlog, author: event.target.value });
+  };
+
+  const handleUrlChange = event => {
+    setNewBlog({ ...newBlog, url: event.target.value });
+  };
+
+  const handleBlogCreate = async event => {
+    event.preventDefault();
+    try {
+      const createdBlog = await blogService.create(newBlog);
+      setNewBlog({
+        title: "",
+        author: "",
+        url: ""
+      });
+      console.log(`${createdBlog.title} was created`);
+    } catch (exception) {
+      return exception;
+    }
+  };
 
   return (
     <div>
-      <p>
-        {user.name} is logged in <button onClick={handleLogout}>logout</button>
-      </p>
-      <h2>blogs</h2>
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {user === null ? (
+        <Login
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+          loginHandler={handleLogin}
+        />
+      ) : (
+        <div>
+          <p>
+            {user.name} is logged in{" "}
+            <button onClick={handleLogout}>logout</button>
+          </p>
+          <BlogForm
+            title={newBlog.title}
+            titleChangeHandler={handleTitleChange}
+            author={newBlog.author}
+            authorChangeHandler={handleAuthorChange}
+            url={newBlog.url}
+            urlChangeHandler={handleUrlChange}
+            blogCreateHandler={handleBlogCreate}
+          />
+          <h2>blogs</h2>
+          {blogs.map(blog => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
