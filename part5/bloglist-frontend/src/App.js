@@ -158,15 +158,19 @@ function App() {
             <button onClick={toggleBlogCreate}>Create a new Blog</button>
           )}
           <h2>Blogs</h2>
-          {blogs.map(blog => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              setNotification={setNotification}
-              blogs={blogs}
-              setBlogs={setBlogs}
-            />
-          ))}
+          {blogs
+            .sort(function(a, b) {
+              return b.likes - a.likes;
+            })
+            .map(blog => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                setNotification={setNotification}
+                blogs={blogs}
+                setBlogs={setBlogs}
+              />
+            ))}
         </div>
       )}
     </div>
