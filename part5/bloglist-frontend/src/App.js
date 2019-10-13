@@ -101,7 +101,7 @@ function App() {
 
   return (
     <div>
-      {notification.message != null ? (
+      {notification.message !== null ? (
         <Notification message={notification.message} type={notification.type} />
       ) : null}
       {user === null ? (

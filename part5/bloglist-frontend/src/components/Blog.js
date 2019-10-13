@@ -20,7 +20,7 @@ const Blog = ({ blog, setNotification, blogs, setBlogs, userId }) => {
       };
       const returnedObject = await blogService.update(blog.id, newBlogObject);
       setNotification({
-        message: `Liked!`,
+        message: "Liked!",
         type: "success"
       });
       setTimeout(() => {
@@ -46,7 +46,7 @@ const Blog = ({ blog, setNotification, blogs, setBlogs, userId }) => {
       if (window.confirm("Are you sure you wish to remove this blog?")) {
         await blogService.remove(blog.id);
         setNotification({
-          message: `Blog was successfully removed`,
+          message: "Blog was successfully removed",
           type: "success"
         });
         setTimeout(() => {
