@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import logo from './logo.svg';
 import "./app.css";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -46,6 +45,7 @@ function App() {
         password
       });
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -147,6 +147,7 @@ function App() {
                 setNotification={setNotification}
                 blogs={blogs}
                 setBlogs={setBlogs}
+                userId={user.id}
               />
             ))}
         </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, setNotification, blogs, setBlogs }) => {
+const Blog = ({ blog, setNotification, blogs, setBlogs, userId }) => {
   const [showDetails, setShowDetails] = useState(false);
   const blogStyle = {
     paddingTop: 10,
@@ -76,7 +76,9 @@ const Blog = ({ blog, setNotification, blogs, setBlogs }) => {
             {blog.likes} likes <button onClick={likeClickHandler}>like!</button>
           </p>
           <p>{blog.user.name}</p>
-          <button onClick={removeHandler}>remove</button>
+          {blog.user.id === userId ? (
+            <button onClick={removeHandler}>remove</button>
+          ) : null}
         </div>
       ) : null}
     </div>
