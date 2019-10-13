@@ -7,6 +7,7 @@ import Blog from "./components/Blog";
 import Login from "./components/Login";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
+import Togglable from "./components/Togglable";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -18,11 +19,11 @@ function App() {
     author: "",
     url: ""
   });
-  const [createBlogVisible, setCreateBlogVisible] = useState(false);
   const [notification, setNotification] = useState({
     message: null,
     type: null
   });
+  const blogFormRef = React.createRef();
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => setBlogs(initialBlogs));
@@ -69,34 +70,10 @@ function App() {
     }
   };
 
-  const toggleBlogCreate = event => {
-    if (!createBlogVisible) {
-      setCreateBlogVisible(true);
-    } else {
-      setCreateBlogVisible(false);
-      setNewBlog({
-        title: "",
-        author: "",
-        url: ""
-      });
-    }
-  };
-
-  const handleTitleChange = event => {
-    setNewBlog({ ...newBlog, title: event.target.value });
-  };
-
-  const handleAuthorChange = event => {
-    setNewBlog({ ...newBlog, author: event.target.value });
-  };
-
-  const handleUrlChange = event => {
-    setNewBlog({ ...newBlog, url: event.target.value });
-  };
-
   const handleBlogCreate = async event => {
     event.preventDefault();
     try {
+      blogFormRef.current.toggleVisibility();
       const createdBlog = await blogService.create(newBlog);
       setBlogs(blogs.concat(createdBlog));
       setNewBlog({
@@ -141,22 +118,23 @@ function App() {
             {user.name} is logged in{" "}
             <button onClick={handleLogout}>logout</button>
           </p>
-          {createBlogVisible === true ? (
-            <div>
-              <BlogForm
-                title={newBlog.title}
-                titleChangeHandler={handleTitleChange}
-                author={newBlog.author}
-                authorChangeHandler={handleAuthorChange}
-                url={newBlog.url}
-                urlChangeHandler={handleUrlChange}
-                blogCreateHandler={handleBlogCreate}
-              />
-              <button onClick={toggleBlogCreate}>Cancel</button>
-            </div>
-          ) : (
-            <button onClick={toggleBlogCreate}>Create a new Blog</button>
-          )}
+          <Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
+            <BlogForm
+              title={newBlog.title}
+              titleChangeHandler={({ target }) =>
+                setNewBlog({ ...newBlog, title: target.value })
+              }
+              author={newBlog.author}
+              authorChangeHandler={({ target }) =>
+                setNewBlog({ ...newBlog, author: target.value })
+              }
+              url={newBlog.url}
+              urlChangeHandler={({ target }) =>
+                setNewBlog({ ...newBlog, url: target.value })
+              }
+              blogCreateHandler={handleBlogCreate}
+            />
+          </Togglable>
           <h2>Blogs</h2>
           {blogs
             .sort(function(a, b) {

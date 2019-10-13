@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, notification, setNotification, blogs, setBlogs }) => {
+const Blog = ({ blog, setNotification, blogs, setBlogs }) => {
   const [showDetails, setShowDetails] = useState(false);
   const blogStyle = {
     paddingTop: 10,
@@ -39,6 +39,31 @@ const Blog = ({ blog, notification, setNotification, blogs, setBlogs }) => {
       }, 2000);
     }
   };
+
+  const removeHandler = async event => {
+    event.preventDefault();
+    try {
+      if (window.confirm("Are you sure you wish to remove this blog?")) {
+        await blogService.remove(blog.id);
+        setNotification({
+          message: `Blog was successfully removed`,
+          type: "success"
+        });
+        setTimeout(() => {
+          setNotification({ message: null, type: null });
+        }, 2000);
+        setBlogs(blogs.filter(b => b.id !== blog.id));
+      }
+    } catch (exception) {
+      setNotification({
+        message: `Error: ${exception.message}`,
+        type: "error"
+      });
+      setTimeout(() => {
+        setNotification({ message: null, type: null });
+      }, 2000);
+    }
+  };
   return (
     <div style={blogStyle}>
       <div onClick={() => setShowDetails(!showDetails)}>
@@ -51,6 +76,7 @@ const Blog = ({ blog, notification, setNotification, blogs, setBlogs }) => {
             {blog.likes} likes <button onClick={likeClickHandler}>like!</button>
           </p>
           <p>{blog.user.name}</p>
+          <button onClick={removeHandler}>remove</button>
         </div>
       ) : null}
     </div>
