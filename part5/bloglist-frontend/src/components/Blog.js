@@ -65,12 +65,15 @@ const Blog = ({ blog, setNotification, blogs, setBlogs, userId }) => {
     }
   };
   return (
-    <div style={blogStyle}>
-      <div onClick={() => setShowDetails(!showDetails)}>
+    <div style={blogStyle} className="blogParent">
+      <div
+        onClick={() => setShowDetails(!showDetails)}
+        className="detailToggler"
+      >
         {blog.title} {blog.author}
       </div>
       {showDetails ? (
-        <div>
+        <div className="blogDetails">
           <a href={blog.url}>{blog.url}</a>
           <p>
             {blog.likes} likes <button onClick={likeClickHandler}>like!</button>

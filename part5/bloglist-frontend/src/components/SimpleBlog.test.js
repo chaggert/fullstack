@@ -2,7 +2,7 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render, fireEvent } from "@testing-library/react";
 import SimpleBlog from "./SimpleBlog";
-import { likeClickHandler } from "./Blog";
+import Blog from "./Blog";
 
 test("renders content", () => {
   const blog = {
@@ -43,4 +43,66 @@ test("clicking like twice calls the event handler twice", () => {
   fireEvent.click(button);
 
   expect(mockHandler.mock.calls.length).toBe(2);
+});
+
+describe("Blog detail toggler works", () => {
+  let component;
+
+  const myUser = {
+    username: "myusername",
+    name: "My Name",
+    id: "myid123"
+  };
+
+  const blogs = [
+    {
+      title: "Component testing is done with react-testing-library",
+      author: "The Author",
+      url: "www.google.com",
+      likes: 2,
+      user: myUser
+    }
+  ];
+
+  beforeEach(() => {
+    component = render(
+      <Blog
+        blog={blogs[0]}
+        setNotification={null}
+        blogs={blogs}
+        setBlogs={null}
+        userId={myUser.id}
+      >
+        <div className="detailToggler" />
+      </Blog>
+    );
+  });
+
+  test("renders its children", () => {
+    component.container.querySelector(".detailToggler");
+  });
+
+  test("at start the children are not displayed", () => {
+    const parentDiv = component.container.querySelector(".blogParent");
+
+    expect(parentDiv).toHaveTextContent(
+      "Component testing is done with react-testing-library"
+    );
+    expect(parentDiv).toHaveTextContent("The Author");
+    expect(parentDiv).not.toHaveTextContent("2 likes");
+    expect(parentDiv).not.toHaveTextContent("www.google.com");
+  });
+
+  test("after clicking the button, children are displayed", () => {
+    const div = component.container.querySelector(".detailToggler");
+    fireEvent.click(div);
+
+    const parentDiv = component.container.querySelector(".blogParent");
+    expect(parentDiv).toHaveTextContent(
+      "Component testing is done with react-testing-library"
+    );
+    expect(parentDiv).toHaveTextContent("The Author");
+    expect(parentDiv).toHaveTextContent("2 likes");
+    expect(parentDiv).toHaveTextContent("www.google.com");
+  });
 });
