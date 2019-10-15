@@ -13,12 +13,15 @@ function App() {
   const [blogs, setBlogs] = useState([]);
   const username = useField("text");
   const password = useField("password");
+  const newBlogTitle = useField("text");
+  const newBlogAuthor = useField("text");
+  const newBlogUrl = useField("text");
   const [user, setUser] = useState(null);
-  const [newBlog, setNewBlog] = useState({
-    title: "",
-    author: "",
-    url: ""
-  });
+  // const [newBlog, setNewBlog] = useState({
+  //   title: "",
+  //   author: "",
+  //   url: ""
+  // });
   const [notification, setNotification] = useState({
     message: null,
     type: null
@@ -48,6 +51,8 @@ function App() {
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
+      username.reset();
+      password.reset();
     } catch (exception) {
       setNotification({
         message: `Could not login: ${exception.message}`,
@@ -73,15 +78,22 @@ function App() {
     event.preventDefault();
     try {
       blogFormRef.current.toggleVisibility();
-      const createdBlog = await blogService.create(newBlog);
-      setBlogs(blogs.concat(createdBlog));
-      setNewBlog({
-        title: "",
-        author: "",
-        url: ""
+      const createdBlog = await blogService.create({
+        title: newBlogTitle.value,
+        author: newBlogAuthor.value,
+        url: newBlogUrl.value
       });
+      setBlogs(blogs.concat(createdBlog));
+      newBlogTitle.reset();
+      newBlogAuthor.reset();
+      newBlogUrl.reset();
+      // setNewBlog({
+      //   title: "",
+      //   author: "",
+      //   url: ""
+      // });
       setNotification({
-        message: `New blog ${newBlog.title} successfully created!`,
+        message: `New blog ${createdBlog.title} successfully created!`,
         type: "success"
       });
       setTimeout(() => {
@@ -117,18 +129,21 @@ function App() {
           </p>
           <Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
             <BlogForm
-              title={newBlog.title}
-              titleChangeHandler={({ target }) =>
-                setNewBlog({ ...newBlog, title: target.value })
-              }
-              author={newBlog.author}
-              authorChangeHandler={({ target }) =>
-                setNewBlog({ ...newBlog, author: target.value })
-              }
-              url={newBlog.url}
-              urlChangeHandler={({ target }) =>
-                setNewBlog({ ...newBlog, url: target.value })
-              }
+              newBlogTitle={newBlogTitle}
+              newBlogAuthor={newBlogAuthor}
+              newBlogUrl={newBlogUrl}
+              // title={newBlog.title}
+              // titleChangeHandler={({ target }) =>
+              //   setNewBlog({ ...newBlog, title: target.value })
+              // }
+              // author={newBlog.author}
+              // authorChangeHandler={({ target }) =>
+              //   setNewBlog({ ...newBlog, author: target.value })
+              // }
+              // url={newBlog.url}
+              // urlChangeHandler={({ target }) =>
+              //   setNewBlog({ ...newBlog, url: target.value })
+              // }
               blogCreateHandler={handleBlogCreate}
             />
           </Togglable>

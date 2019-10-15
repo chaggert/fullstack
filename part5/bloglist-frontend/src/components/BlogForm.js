@@ -1,12 +1,12 @@
 import React from "react";
 
 const BlogForm = ({
-  title,
-  titleChangeHandler,
-  author,
-  authorChangeHandler,
-  url,
-  urlChangeHandler,
+  newBlogTitle,
+  // titleChangeHandler,
+  newBlogAuthor,
+  // authorChangeHandler,
+  newBlogUrl,
+  // urlChangeHandler,
   blogCreateHandler
 }) => {
   return (
@@ -14,13 +14,14 @@ const BlogForm = ({
       <h3>Create a new blog</h3>
       <form onSubmit={blogCreateHandler}>
         <p>
-          title: <input value={title} onChange={titleChangeHandler} />
+          title: <input {...newBlogTitle} />
         </p>
         <p>
-          author: <input value={author} onChange={authorChangeHandler} />
+          author: <input {...newBlogAuthor} />
         </p>
         <p>
-          url: <input value={url} onChange={urlChangeHandler} />
+          url: <input {...newBlogUrl} />
+          {/* url: <input value={url} onChange={urlChangeHandler} /> */}
         </p>
         <button type="submit">create</button>
       </form>
