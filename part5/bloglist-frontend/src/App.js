@@ -7,11 +7,12 @@ import Login from "./components/Login";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import { useField } from "./hooks/index";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const username = useField("text");
+  const password = useField("password");
   const [user, setUser] = useState(null);
   const [newBlog, setNewBlog] = useState({
     title: "",
@@ -41,14 +42,12 @@ function App() {
     event.preventDefault();
     try {
       const user = await loginService.login({
-        username,
-        password
+        username: username.value,
+        password: password.value
       });
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      setUsername("");
-      setPassword("");
     } catch (exception) {
       setNotification({
         message: `Could not login: ${exception.message}`,
@@ -107,9 +106,7 @@ function App() {
       {user === null ? (
         <Login
           username={username}
-          setUsername={setUsername}
           password={password}
-          setPassword={setPassword}
           loginHandler={handleLogin}
         />
       ) : (
