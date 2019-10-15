@@ -17,11 +17,6 @@ function App() {
   const newBlogAuthor = useField("text");
   const newBlogUrl = useField("text");
   const [user, setUser] = useState(null);
-  // const [newBlog, setNewBlog] = useState({
-  //   title: "",
-  //   author: "",
-  //   url: ""
-  // });
   const [notification, setNotification] = useState({
     message: null,
     type: null
@@ -87,11 +82,6 @@ function App() {
       newBlogTitle.reset();
       newBlogAuthor.reset();
       newBlogUrl.reset();
-      // setNewBlog({
-      //   title: "",
-      //   author: "",
-      //   url: ""
-      // });
       setNotification({
         message: `New blog ${createdBlog.title} successfully created!`,
         type: "success"
@@ -132,18 +122,6 @@ function App() {
               newBlogTitle={newBlogTitle}
               newBlogAuthor={newBlogAuthor}
               newBlogUrl={newBlogUrl}
-              // title={newBlog.title}
-              // titleChangeHandler={({ target }) =>
-              //   setNewBlog({ ...newBlog, title: target.value })
-              // }
-              // author={newBlog.author}
-              // authorChangeHandler={({ target }) =>
-              //   setNewBlog({ ...newBlog, author: target.value })
-              // }
-              // url={newBlog.url}
-              // urlChangeHandler={({ target }) =>
-              //   setNewBlog({ ...newBlog, url: target.value })
-              // }
               blogCreateHandler={handleBlogCreate}
             />
           </Togglable>

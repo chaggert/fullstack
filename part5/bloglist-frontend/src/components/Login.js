@@ -6,10 +6,10 @@ const Login = ({ username, password, loginHandler }) => {
       <h2>Log in to application</h2>
       <form onSubmit={loginHandler}>
         <div>
-          username <input {...username} />
+          username <input {...username.fieldInfo} />
         </div>
         <div>
-          password <input {...password} />
+          password <input {...password.fieldInfo} />
         </div>
         <button type="submit">login</button>
       </form>
