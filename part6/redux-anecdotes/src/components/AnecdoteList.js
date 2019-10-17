@@ -1,11 +1,17 @@
 import React from "react";
 import { voteFor } from "../reducers/anecdoteReducer";
-import { changeNotification } from "../reducers/notificationReducer";
+import {
+  changeNotification,
+  removeNotification
+} from "../reducers/notificationReducer";
 
 const AnecdoteList = ({ store }) => {
   const vote = anecdote => () => {
     store.dispatch(voteFor(anecdote.id));
     store.dispatch(changeNotification(`Voted for ${anecdote.content}`));
+    setTimeout(() => {
+      store.dispatch(removeNotification());
+    }, 5000);
   };
 
   return (
