@@ -1,16 +1,18 @@
 import React from "react";
 import { voteFor } from "../reducers/anecdoteReducer";
+import { changeNotification } from "../reducers/notificationReducer";
 
-const AnecdoteList = props => {
-  const anecdotes = props.store.getState();
-
-  const vote = id => {
-    props.store.dispatch(voteFor(id));
+const AnecdoteList = ({ store }) => {
+  const vote = anecdote => () => {
+    store.dispatch(voteFor(anecdote.id));
+    store.dispatch(changeNotification(`Voted for ${anecdote.content}`));
   };
+
   return (
     <div>
-      {anecdotes
-        .sort(function(a, b) {
+      {store
+        .getState()
+        .anecdotes.sort(function(a, b) {
           return b.votes - a.votes;
         })
         .map(anecdote => (
@@ -18,7 +20,7 @@ const AnecdoteList = props => {
             <div>{anecdote.content}</div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id)}>vote</button>
+              <button onClick={vote(anecdote)}>vote</button>
             </div>
           </div>
         ))}
@@ -26,4 +28,20 @@ const AnecdoteList = props => {
   );
 };
 
+// const mapStateToProps = state => {
+//   return {
+//     anecdotes: state.anecdotes,
+//     notification: ""
+//   };
+// };
+
+// const mapDispatchToProps = {
+//   voteFor
+// };
+
 export default AnecdoteList;
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(AnecdoteList);
