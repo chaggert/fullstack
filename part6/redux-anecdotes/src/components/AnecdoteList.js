@@ -1,27 +1,27 @@
 import React from "react";
+import { connect } from "react-redux";
 import { voteFor } from "../reducers/anecdoteReducer";
 import {
   changeNotification,
   removeNotification
 } from "../reducers/notificationReducer";
 
-const AnecdoteList = ({ store }) => {
+const AnecdoteList = props => {
   const vote = anecdote => () => {
-    store.dispatch(voteFor(anecdote.id));
-    store.dispatch(changeNotification(`Voted for ${anecdote.content}`));
+    props.voteFor(anecdote.id);
+    props.changeNotification(`Voted for ${anecdote.content}`);
     setTimeout(() => {
-      store.dispatch(removeNotification());
+      props.removeNotification();
     }, 5000);
   };
 
   return (
     <div>
-      {store
-        .getState()
-        .anecdotes.sort(function(a, b) {
+      {props.anecdotes
+        .sort(function(a, b) {
           return b.votes - a.votes;
         })
-        .filter(anecdote => anecdote.content.includes(store.getState().filter))
+        .filter(anecdote => anecdote.content.includes(props.filter))
         .map(anecdote => (
           <div key={anecdote.id}>
             <div>{anecdote.content}</div>
@@ -35,20 +35,20 @@ const AnecdoteList = ({ store }) => {
   );
 };
 
-// const mapStateToProps = state => {
-//   return {
-//     anecdotes: state.anecdotes,
-//     notification: ""
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter
+  };
+};
 
-// const mapDispatchToProps = {
-//   voteFor
-// };
+const mapDispatchToProps = {
+  voteFor,
+  changeNotification,
+  removeNotification
+};
 
-export default AnecdoteList;
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(AnecdoteList);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnecdoteList);
