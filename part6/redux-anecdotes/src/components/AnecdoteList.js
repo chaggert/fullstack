@@ -17,28 +17,30 @@ const AnecdoteList = props => {
 
   return (
     <div>
-      {props.anecdotes
-        .sort(function(a, b) {
-          return b.votes - a.votes;
-        })
-        .filter(anecdote => anecdote.content.includes(props.filter))
-        .map(anecdote => (
-          <div key={anecdote.id}>
-            <div>{anecdote.content}</div>
-            <div>
-              has {anecdote.votes}
-              <button onClick={vote(anecdote)}>vote</button>
-            </div>
+      {props.anecdotesToShow.map(anecdote => (
+        <div key={anecdote.id}>
+          <div>{anecdote.content}</div>
+          <div>
+            has {anecdote.votes}
+            <button onClick={vote(anecdote)}>vote</button>
           </div>
-        ))}
+        </div>
+      ))}
     </div>
   );
 };
 
+const anecdotesToShow = ({ anecdotes, filter }) => {
+  return anecdotes
+    .sort(function(a, b) {
+      return b.votes - a.votes;
+    })
+    .filter(anecdote => anecdote.content.includes(filter));
+};
+
 const mapStateToProps = state => {
   return {
-    anecdotes: state.anecdotes,
-    filter: state.filter
+    anecdotesToShow: anecdotesToShow(state)
   };
 };
 
