@@ -1,6 +1,6 @@
 const getId = () => (100000 * Math.random()).toFixed(0);
 
-const asObject = anecdote => {
+export const asObject = anecdote => {
   return {
     content: anecdote,
     id: getId(),
@@ -36,10 +36,10 @@ export const initializeAnecdotes = anecdotes => {
   };
 };
 
-export const createAnecdote = anecdote => {
+export const createAnecdote = data => {
   return {
     type: "NEW_ANECDOTE",
-    data: asObject(anecdote)
+    data
   };
 };
 
