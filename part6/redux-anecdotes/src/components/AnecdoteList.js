@@ -21,6 +21,7 @@ const AnecdoteList = ({ store }) => {
         .anecdotes.sort(function(a, b) {
           return b.votes - a.votes;
         })
+        .filter(anecdote => anecdote.content.includes(store.getState().filter))
         .map(anecdote => (
           <div key={anecdote.id}>
             <div>{anecdote.content}</div>
