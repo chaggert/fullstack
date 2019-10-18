@@ -8,7 +8,7 @@ import {
 
 const AnecdoteList = props => {
   const vote = anecdote => () => {
-    props.voteFor(anecdote.id);
+    props.voteFor(anecdote);
     props.changeNotification(`Voted for ${anecdote.content}`);
     setTimeout(() => {
       props.removeNotification();
