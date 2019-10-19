@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Redirect,
   withRouter
 } from "react-router-dom";
 
@@ -96,6 +95,7 @@ const CreateNew = props => {
       info,
       votes: 0
     });
+    props.history.push("/");
   };
 
   return (
@@ -132,6 +132,8 @@ const CreateNew = props => {
   );
 };
 
+const CreateNewRouter = withRouter(CreateNew);
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -155,24 +157,29 @@ const App = () => {
   const addNew = anecdote => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(`${anecdote.content} has been added`);
+    setTimeout(() => {
+      setNotification("");
+    }, 10000);
   };
 
   const anecdoteById = id => anecdotes.find(a => a.id === id);
 
-  const vote = id => {
-    const anecdote = anecdoteById(id);
+  // const vote = id => {
+  //   const anecdote = anecdoteById(id);
 
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1
-    };
+  //   const voted = {
+  //     ...anecdote,
+  //     votes: anecdote.votes + 1
+  //   };
 
-    setAnecdotes(anecdotes.map(a => (a.id === id ? voted : a)));
-  };
+  //   setAnecdotes(anecdotes.map(a => (a.id === id ? voted : a)));
+  // };
 
   return (
     <div>
       <h1>Software anecdotes</h1>
+      {notification !== "" ? <p>{notification}</p> : null}
       <Router>
         <Menu />
         <Route
@@ -191,7 +198,7 @@ const App = () => {
         <Route
           exact
           path="/create"
-          render={() => <CreateNew addNew={addNew} />}
+          render={() => <CreateNewRouter addNew={addNew} />}
         />
         <Footer />
       </Router>
