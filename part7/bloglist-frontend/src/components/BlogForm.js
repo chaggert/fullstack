@@ -1,23 +1,32 @@
 import React from "react";
+import { connect } from "react-redux";
+import { createBlog } from "../reducers/blogReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
-const BlogForm = ({
-  newBlogTitle,
-  newBlogAuthor,
-  newBlogUrl,
-  blogCreateHandler
-}) => {
+const BlogForm = props => {
+  const addBlog = async event => {
+    event.preventDefault();
+    const title = event.target.title.value;
+    const author = event.target.author.value;
+    const url = event.target.url.value;
+    event.target.title.value = "";
+    event.target.author.value = "";
+    event.target.url.value = "";
+    props.createBlog(title, author, url);
+    props.setNotification(`${title} was created`, 3);
+  };
   return (
     <div>
       <h3>Create a new blog</h3>
-      <form onSubmit={blogCreateHandler}>
+      <form onSubmit={addBlog}>
         <p>
-          title: <input {...newBlogTitle.fieldInfo} />
+          title: <input name="title" />
         </p>
         <p>
-          author: <input {...newBlogAuthor.fieldInfo} />
+          author: <input name="author" />
         </p>
         <p>
-          url: <input {...newBlogUrl.fieldInfo} />
+          url: <input name="url" />
         </p>
         <button type="submit">create</button>
       </form>
@@ -25,4 +34,7 @@ const BlogForm = ({
   );
 };
 
-export default BlogForm;
+export default connect(
+  null,
+  { createBlog, setNotification }
+)(BlogForm);
