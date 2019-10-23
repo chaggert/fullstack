@@ -1,35 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import "./app.css";
-import blogService from "./services/blogs";
+//import blogService from "./services/blogs";
 // import loginService from "./services/login";
 import Login from "./components/Login";
 import BlogForm from "./components/BlogForm";
 import Blogs from "./components/Blogs";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
-// import { useField } from "./hooks/index";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
-import { logout } from "./reducers/loginReducer";
+import { logout, getLoggedInUser } from "./reducers/loginReducer";
 
 const App = props => {
   // const username = useField("text");
   // const password = useField("password");
-  const [user, setUser] = useState(null);
+  //const [user, setUser] = useState(null);
   const blogFormRef = React.createRef();
 
   useEffect(() => {
     props.initializeBlogs();
-  });
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
+    props.getLoggedInUser();
+    // const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    // if (loggedUserJSON) {
+    //   blogService.setToken(loggedUserJSON.token);
+    // }
   }, []);
 
   // const handleLogin = async event => {
@@ -93,19 +88,22 @@ const App = props => {
   return (
     <div>
       <Notification />
-      {user === null ? (
+      {props.getLoggedInUser() === null ? (
         <Login />
       ) : (
-        <div>
-          <p>
-            {user.name} is logged in{" "}
-            <button onClick={props.logout()}>logout</button>
-          </p>
-          <Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
-            <BlogForm />
-          </Togglable>
-          <Blogs user={user} />
-        </div>
+        (console.log(props.login),
+        (
+          <div>
+            <p>
+              a user is logged in{" "}
+              <button onClick={props.logout()}>logout</button>
+            </p>
+            <Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
+              <BlogForm />
+            </Togglable>
+            <Blogs user={props.user} />
+          </div>
+        ))
       )}
     </div>
   );
@@ -114,7 +112,8 @@ const App = props => {
 const mapDispatchToProps = {
   initializeBlogs,
   setNotification,
-  logout
+  logout,
+  getLoggedInUser
 };
 
 export default connect(

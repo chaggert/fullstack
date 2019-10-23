@@ -28,7 +28,7 @@ const Blogs = props => {
           //   setNotification={setNotification}
           //   blogs={blogs}
           //   setBlogs={setBlogs}
-          userId={props.user.id}
+          //userId={props.user.id}
         />
       ))}
     </div>

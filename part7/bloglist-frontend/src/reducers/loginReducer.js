@@ -4,9 +4,19 @@ import blogService from "../services/blogs";
 const loginReducer = (state = null, action) => {
   switch (action.type) {
     case "LOGIN_USER":
+      window.localStorage.setItem("loggedBlogappUser", action.data);
       return action.data;
     case "LOGOUT_USER":
-      return action.data;
+      window.localStorage.removeItem("loggedBlogappUser");
+      return null;
+    case "GET_USER":
+      const user = window.localStorage.getItem("loggedBlogappUser");
+      console.log(user);
+      if (user) {
+        blogService.setToken(user.token);
+        return user;
+      }
+      return state;
     default:
       return state;
   }
@@ -19,7 +29,7 @@ export const login = (username, password) => {
       password: password
     });
     const user = JSON.stringify(loggedInUser);
-    window.localStorage.setItem("loggedBlogappUser", user);
+    console.log(user);
     blogService.setToken(user.token);
     dispatch({
       type: "LOGIN_USER",
@@ -30,10 +40,16 @@ export const login = (username, password) => {
 
 export const logout = () => {
   return dispatch => {
-    window.localStorage.removeItem("loggedBlogappUser");
     dispatch({
-      type: "LOGOUT_USER",
-      data: null
+      type: "LOGOUT_USER"
+    });
+  };
+};
+
+export const getLoggedInUser = () => {
+  return dispatch => {
+    dispatch({
+      type: "GET_USER"
     });
   };
 };
