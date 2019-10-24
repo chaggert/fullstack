@@ -53,10 +53,10 @@ export const createBlog = (title, author, url) => {
 export const removeBlog = object => {
   return async dispatch => {
     await blogService.remove(object.id);
-    const newBlogs = await blogService.getAll();
+    const blogs = await blogService.getAll();
     dispatch({
       type: "REMOVE_BLOG",
-      data: newBlogs
+      data: blogs
     });
   };
 };

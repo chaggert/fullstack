@@ -4,19 +4,12 @@ import blogService from "../services/blogs";
 const loginReducer = (state = null, action) => {
   switch (action.type) {
     case "LOGIN_USER":
-      window.localStorage.setItem("loggedBlogappUser", action.data);
-      return action.data;
+      return action.user;
+    case "GET_USER":
+      return action.user;
     case "LOGOUT_USER":
       window.localStorage.removeItem("loggedBlogappUser");
       return null;
-    case "GET_USER":
-      const user = window.localStorage.getItem("loggedBlogappUser");
-      console.log(user);
-      if (user) {
-        blogService.setToken(user.token);
-        return user;
-      }
-      return state;
     default:
       return state;
   }
@@ -30,10 +23,24 @@ export const login = (username, password) => {
     });
     const user = JSON.stringify(loggedInUser);
     console.log(user);
+    window.localStorage.setItem("loggedBlogappUser", user);
     blogService.setToken(user.token);
     dispatch({
       type: "LOGIN_USER",
-      data: user
+      user: user
+    });
+  };
+};
+
+export const getLoggedInUser = () => {
+  return dispatch => {
+    const user = JSON.parse(window.localStorage.getItem("loggedBlogappUser"));
+    if (user) {
+      blogService.setToken(user.token);
+    }
+    dispatch({
+      type: "GET_USER",
+      user: user
     });
   };
 };
@@ -46,12 +53,20 @@ export const logout = () => {
   };
 };
 
-export const getLoggedInUser = () => {
-  return dispatch => {
-    dispatch({
-      type: "GET_USER"
-    });
-  };
-};
+// export const getLoggedInUser = () => {
+//   return dispatch => {
+//     dispatch({
+//       type: "GET_USER"
+//     });
+//   };
+// };
+
+// export const setUser = () => {
+//   return dispatch => {
+//     dispatch({
+//       type: "SET_USER"
+//     });
+//   };
+// };
 
 export default loginReducer;
