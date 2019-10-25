@@ -6,30 +6,9 @@ import { setNotification } from "../reducers/notificationReducer";
 const Blogs = props => {
   return (
     <div>
-      {/* {blogs
-        .sort(function(a, b) {
-          return b.likes - a.likes;
-        })
-        .map(blog => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            setNotification={setNotification}
-            blogs={blogs}
-            setBlogs={setBlogs}
-            userId={user.id}
-          />
-        ))} */}
       <h2>Blogs</h2>
       {props.sortedBlogs.map(blog => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          //   setNotification={setNotification}
-          //   blogs={blogs}
-          //   setBlogs={setBlogs}
-          //userId={props.user.id}
-        />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   );

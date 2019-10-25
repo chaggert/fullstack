@@ -14,39 +14,52 @@ import { logout, getLoggedInUser } from "./reducers/loginReducer";
 
 const App = props => {
   const blogFormRef = React.createRef();
+  //const user = JSON.parse(window.localStorage.getItem("loggedBlogappUser"));
+  const currentUser = JSON.parse(
+    window.localStorage.getItem("loggedBlogappUser")
+  );
 
   useEffect(() => {
+    //props.getLoggedInUser();
     props.initializeBlogs();
-    props.getLoggedInUser();
   }, []);
 
   return (
     <div>
       <Notification />
-      {props.user === null ? (
+      {!currentUser ? (
         <Login />
       ) : (
         <div>
           <p>
+            {currentUser.name} is logged in{" "}
+            <button onClick={props.logout()}>logout</button>
+          </p>
+          {/* <form onSubmit={props.logout()}>
+            <p>{currentUser.name} is logged in </p>
+            <button type="submit">logout</button>
+          </form> */}
+          {/* <p>
             {props.user.name} is logged in{" "}
             <button onclick={null}>logout</button>
-          </p>
+          </p> */}
+
           <Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
             <BlogForm />
           </Togglable>
-          <Blogs user={props.user} />
+          <Blogs user={currentUser} />
         </div>
       )}
     </div>
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    user: state.user,
-    blogs: state.blogs
-  };
-};
+// const mapStateToProps = state => {
+//   return {
+//     user: state.user,
+//     blogs: state.blogs
+//   };
+// // }
 
 const mapDispatchToProps = {
   initializeBlogs,
@@ -56,7 +69,7 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(App);
 
