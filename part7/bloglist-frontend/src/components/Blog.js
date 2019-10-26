@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { voteFor, removeBlog } from "../reducers/blogReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
 const Blog = props => {
   const [showDetails, setShowDetails] = useState(false);
@@ -12,59 +13,15 @@ const Blog = props => {
     marginBottom: 5
   };
 
-  // const likeClickHandler = async event => {
-  //   event.preventDefault();
-  //   try {
-  //     const newBlogObject = {
-  //       ...blog,
-  //       likes: blog.likes + 1
-  //     };
-  //     const returnedObject = await blogService.update(blog.id, newBlogObject);
-  //     setNotification({
-  //       message: "Liked!",
-  //       type: "success"
-  //     });
-  //     setTimeout(() => {
-  //       setNotification({ message: null, type: null });
-  //     }, 2000);
-  //     setBlogs(
-  //       blogs.map(b => (b.id !== returnedObject.id ? b : returnedObject))
-  //     );
-  //   } catch (exception) {
-  //     setNotification({
-  //       message: `Error: ${exception.message}`,
-  //       type: "error"
-  //     });
-  //     setTimeout(() => {
-  //       setNotification({ message: null, type: null });
-  //     }, 2000);
-  //   }
-  // };
+  const vote = async event => {
+    props.voteFor(props.blog);
+    props.setNotification(`Voted for ${props.blog.title}`, 3);
+  };
 
-  // const removeHandler = async event => {
-  //   event.preventDefault();
-  //   try {
-  //     if (window.confirm("Are you sure you wish to remove this blog?")) {
-  //       await blogService.remove(blog.id);
-  //       setNotification({
-  //         message: "Blog was successfully removed",
-  //         type: "success"
-  //       });
-  //       setTimeout(() => {
-  //         setNotification({ message: null, type: null });
-  //       }, 2000);
-  //       setBlogs(blogs.filter(b => b.id !== blog.id));
-  //     }
-  //   } catch (exception) {
-  //     setNotification({
-  //       message: `Error: ${exception.message}`,
-  //       type: "error"
-  //     });
-  //     setTimeout(() => {
-  //       setNotification({ message: null, type: null });
-  //     }, 2000);
-  //   }
-  // };
+  const remove = async event => {
+    props.removeBlog(props.blog);
+    props.setNotification(`${props.blog.title} has been removed`, 3);
+  };
 
   return (
     <div style={blogStyle} className="blogParent">
@@ -79,11 +36,11 @@ const Blog = props => {
           <a href={props.blog.url}>{props.blog.url}</a>
           <p>
             {props.blog.likes} likes{" "}
-            <button onClick={() => props.voteFor(props.blog)}>like!</button>
+            <button onClick={() => vote()}>like!</button>
           </p>
           <p>{props.blog.user.name}</p>
-          {props.blog.user.id === props.userId ? (
-            <button onClick={() => props.removeBlog(props.blog)}>remove</button>
+          {props.blog.user.id === props.user.id ? (
+            <button onClick={() => remove()}>remove</button>
           ) : null}
         </div>
       ) : null}
@@ -91,12 +48,19 @@ const Blog = props => {
   );
 };
 
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  };
+};
+
 const mapDispatchToProps = {
   voteFor,
-  removeBlog
+  removeBlog,
+  setNotification
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Blog);

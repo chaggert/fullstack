@@ -8,7 +8,7 @@ const loginReducer = (state = null, action) => {
     case "GET_USER":
       return action.user;
     case "LOGOUT_USER":
-      //window.localStorage.removeItem("loggedBlogappUser");
+      window.localStorage.removeItem("loggedBlogappUser");
       return null;
     default:
       return state;
@@ -22,7 +22,6 @@ export const login = (username, password) => {
       password: password
     });
     const userString = JSON.stringify(loggedInUser);
-    console.log("new logged in user", loggedInUser);
     window.localStorage.setItem("loggedBlogappUser", userString);
     blogService.setToken(loggedInUser.token);
     dispatch({
@@ -34,19 +33,11 @@ export const login = (username, password) => {
 
 export const getLoggedInUser = () => {
   return dispatch => {
-    //const user = window.localStorage.getItem("loggedBlogappUser");
-    //console.log("what", user);
-    //console.log("what2", JSON.parse(user).name);
     let user;
     if (window.localStorage.getItem("loggedBlogappUser")) {
       user = JSON.parse(window.localStorage.getItem("loggedBlogappUser"));
-      console.log(
-        "this is what stroage has",
-        window.localStorage.getItem("loggedBlogappUser")
-      );
-      console.log("uSer retrieved from local storage", user);
+      blogService.setToken(user.token);
     } else {
-      console.log("no user was retrieved");
       user = null;
     }
     dispatch({

@@ -1,15 +1,16 @@
 import blogService from "../services/blogs";
 
-export const asObject = (title, author, url) => {
+export const asObject = (title, author, url, blogUser) => {
+  console.log(blogUser.username);
   return {
     title: title,
     author: author,
     url: url,
     user: {
-      username: "chaggert",
-      name: "First Last",
-      id: "5d9f48e7e4ebf7371ccd0a1f"
-    }, //Set user based on token
+      username: blogUser.username,
+      name: blogUser.name,
+      id: blogUser.id
+    },
     likes: 0
   };
 };
@@ -20,7 +21,12 @@ const blogReducer = (state = [], action) => {
       const updatedObject = action.data;
       return state.map(b => (b.id !== updatedObject.id ? b : updatedObject));
     case "NEW_BLOG":
-      return [...state, action.data];
+      if (action.data) {
+        return [...state, action.data];
+      } else {
+        return state;
+      }
+
     case "INIT_BLOGS":
       return action.data;
     case "REMOVE_BLOG":
@@ -40,9 +46,11 @@ export const initializeBlogs = () => {
   };
 };
 
-export const createBlog = (title, author, url) => {
+export const createBlog = (title, author, url, user) => {
   return async dispatch => {
-    const newBlog = await blogService.create(asObject(title, author, url));
+    const newBlog = await blogService.create(
+      asObject(title, author, url, user)
+    );
     dispatch({
       type: "NEW_BLOG",
       data: newBlog

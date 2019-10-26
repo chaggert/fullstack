@@ -10,8 +10,8 @@ const Login = props => {
     event.target.username.value = "";
     event.target.password.value = "";
     props.login(username, password);
-    // props.setUser(loggedInUser);
   };
+
   return (
     <div>
       <h2>Log into application</h2>
@@ -27,23 +27,6 @@ const Login = props => {
     </div>
   );
 };
-
-// const Login = ({ username, password, loginHandler }) => {
-//   return (
-//     <div>
-//       <h2>Log in to application</h2>
-//       <form onSubmit={loginHandler}>
-//         <div>
-//           username <input {...username.fieldInfo} />
-//         </div>
-//         <div>
-//           password <input {...password.fieldInfo} />
-//         </div>
-//         <button type="submit">login</button>
-//       </form>
-//     </div>
-//   );
-// };
 
 export default connect(
   null,
