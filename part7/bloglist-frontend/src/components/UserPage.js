@@ -6,7 +6,7 @@ const UserPage = props => {
     return null;
   }
   const generateBlogs = () => {
-    return props.user.blogs.map(b => <li>{b.title}</li>);
+    return props.user.blogs.map(b => <li key={b.id}>{b.title}</li>);
   };
   return (
     <div>

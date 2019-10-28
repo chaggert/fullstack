@@ -7,6 +7,7 @@ import Notification from "./components/Notification";
 import BlogPage from "./components/BlogPage.js";
 import UsersPage from "./components/UsersPage";
 import UserPage from "./components/UserPage";
+import OneBlogPage from "./components/OneBlogPage";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
 import { logout, getLoggedInUser } from "./reducers/loginReducer";
@@ -56,6 +57,13 @@ const App = props => {
               render={() => <UserPage />}
             />
           ) : null}
+          {props.blog ? (
+            <Route
+              exact
+              path={`/blogs/${props.blog.id}`}
+              render={() => <OneBlogPage />}
+            />
+          ) : null}
         </Router>
       )}
     </div>
@@ -67,7 +75,8 @@ const mapStateToProps = state => {
     loggedInUser: state.loggedInUser,
     blogs: state.blogs,
     users: state.users,
-    user: state.user
+    user: state.user,
+    blog: state.blog
   };
 };
 

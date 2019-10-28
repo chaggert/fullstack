@@ -1,14 +1,26 @@
 import React from "react";
 import { connect } from "react-redux";
-import Blog from "./Blog";
+import { Link } from "react-router-dom";
 import { setNotification } from "../reducers/notificationReducer";
+import { getOneBlog } from "../reducers/oneBlogReducer";
 
 const Blogs = props => {
+  const padding = {
+    paddingRight: 5
+  };
   return (
     <div>
       <h2>Blogs</h2>
       {props.sortedBlogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <div key={blog.id}>
+          <Link
+            style={padding}
+            to={`/blogs/${blog.id}`}
+            onClick={() => props.getOneBlog(blog.id)}
+          >
+            {blog.title}
+          </Link>
+        </div>
       ))}
     </div>
   );
@@ -22,12 +34,14 @@ const blogsToSort = ({ blogs }) => {
 
 const mapStateToProps = state => {
   return {
-    sortedBlogs: blogsToSort(state)
+    sortedBlogs: blogsToSort(state),
+    blog: state.blog
   };
 };
 
 const mapDispatchToProps = {
-  setNotification
+  setNotification,
+  getOneBlog
 };
 
 export default connect(
