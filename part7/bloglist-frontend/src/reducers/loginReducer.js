@@ -4,9 +4,9 @@ import blogService from "../services/blogs";
 const loginReducer = (state = null, action) => {
   switch (action.type) {
     case "LOGIN_USER":
-      return action.user;
+      return action.loggedInUser;
     case "GET_USER":
-      return action.user;
+      return action.loggedInUser;
     case "LOGOUT_USER":
       window.localStorage.removeItem("loggedBlogappUser");
       return null;
@@ -17,16 +17,16 @@ const loginReducer = (state = null, action) => {
 
 export const login = (username, password) => {
   return async dispatch => {
-    const loggedInUser = await loginService.login({
+    const retrievedLoggedInUser = await loginService.login({
       username: username,
       password: password
     });
-    const userString = JSON.stringify(loggedInUser);
+    const userString = JSON.stringify(retrievedLoggedInUser);
     window.localStorage.setItem("loggedBlogappUser", userString);
-    blogService.setToken(loggedInUser.token);
+    blogService.setToken(retrievedLoggedInUser.token);
     dispatch({
       type: "LOGIN_USER",
-      user: loggedInUser
+      loggedInUser: retrievedLoggedInUser
     });
   };
 };
@@ -42,7 +42,7 @@ export const getLoggedInUser = () => {
     }
     dispatch({
       type: "GET_USER",
-      user: user
+      loggedInUser: user
     });
   };
 };
@@ -51,7 +51,7 @@ export const logout = () => {
   return dispatch => {
     dispatch({
       type: "LOGOUT_USER",
-      user: null
+      loggedInUser: null
     });
   };
 };

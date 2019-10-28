@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Notification from "./components/Notification";
 import BlogPage from "./components/BlogPage.js";
 import UsersPage from "./components/UsersPage";
+import UserPage from "./components/UserPage";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
 import { logout, getLoggedInUser } from "./reducers/loginReducer";
@@ -37,17 +38,24 @@ const App = props => {
   return (
     <div>
       <Notification />
-      {props.user === null ? (
+      {props.loggedInUser === null ? (
         <Login />
       ) : (
         <Router>
           <Menu />
           <p>
-            {props.user.name} is logged in{" "}
+            {props.loggedInUser.name} is logged in{" "}
             <button onClick={() => props.logout()}>logout</button>
           </p>
           <Route exact path="/" render={() => <BlogPage />} />
           <Route exact path="/users" render={() => <UsersPage />} />
+          {props.user ? (
+            <Route
+              exact
+              path={`/users/${props.user.id}`}
+              render={() => <UserPage />}
+            />
+          ) : null}
         </Router>
       )}
     </div>
@@ -56,9 +64,10 @@ const App = props => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user,
+    loggedInUser: state.loggedInUser,
     blogs: state.blogs,
-    users: state.users
+    users: state.users,
+    user: state.user
   };
 };
 

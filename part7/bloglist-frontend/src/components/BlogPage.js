@@ -11,14 +11,14 @@ const BlogPage = props => {
       <Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
         <BlogForm />
       </Togglable>
-      <Blogs user={props.user} />
+      <Blogs loggedInUser={props.loggedInUser} />
     </div>
   );
 };
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    loggedInUser: state.loggedInUser
   };
 };
 

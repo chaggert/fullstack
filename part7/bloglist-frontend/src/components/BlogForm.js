@@ -12,7 +12,7 @@ const BlogForm = props => {
     event.target.title.value = "";
     event.target.author.value = "";
     event.target.url.value = "";
-    props.createBlog(title, author, url, props.user);
+    props.createBlog(title, author, url, props.loggedInUser);
     props.setNotification(`${title} was created`, 3);
   };
   return (
@@ -36,7 +36,7 @@ const BlogForm = props => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    loggedInUser: state.loggedInUser
   };
 };
 

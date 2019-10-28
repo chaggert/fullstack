@@ -6,12 +6,14 @@ import blogReducer from "./reducers/blogReducer";
 import notificationReducer from "./reducers/notificationReducer";
 import loginReducer from "./reducers/loginReducer";
 import userReducer from "./reducers/userReducer";
+import oneUserReducer from "./reducers/oneUserReducer";
 
 const reducer = combineReducers({
   blogs: blogReducer,
   notification: notificationReducer,
-  user: loginReducer,
-  users: userReducer
+  loggedInUser: loginReducer,
+  users: userReducer,
+  user: oneUserReducer
 });
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));

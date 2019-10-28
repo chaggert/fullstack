@@ -39,7 +39,7 @@ const Blog = props => {
             <button onClick={() => vote()}>like!</button>
           </p>
           <p>{props.blog.user.name}</p>
-          {props.blog.user.id === props.user.id ? (
+          {props.blog.user.id === props.loggedInUser.id ? (
             <button onClick={() => remove()}>remove</button>
           ) : null}
         </div>
@@ -50,7 +50,7 @@ const Blog = props => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    loggedInUser: state.loggedInUser
   };
 };
 
