@@ -32,6 +32,10 @@ const App = props => {
         <Link style={padding} to="/users">
           users
         </Link>
+        <p>
+          {props.loggedInUser.name} is logged in{" "}
+          <button onClick={() => props.logout()}>logout</button>
+        </p>
       </div>
     );
   };
@@ -44,10 +48,6 @@ const App = props => {
       ) : (
         <Router>
           <Menu />
-          <p>
-            {props.loggedInUser.name} is logged in{" "}
-            <button onClick={() => props.logout()}>logout</button>
-          </p>
           <Route exact path="/" render={() => <BlogPage />} />
           <Route exact path="/users" render={() => <UsersPage />} />
           {props.user ? (
