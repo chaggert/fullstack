@@ -1,7 +1,6 @@
 import blogService from "../services/blogs";
 
 export const asObject = (title, author, url, blogUser) => {
-  console.log(blogUser.username);
   return {
     title: title,
     author: author,
@@ -11,7 +10,19 @@ export const asObject = (title, author, url, blogUser) => {
       name: blogUser.name,
       id: blogUser.id
     },
-    likes: 0
+    likes: 0,
+    comments: []
+  };
+};
+
+export const commentAsObject = (comment, user) => {
+  return {
+    comment: comment,
+    timestamp: new Date(),
+    user: {
+      username: user.name,
+      id: user.id
+    }
   };
 };
 
@@ -26,7 +37,11 @@ const blogReducer = (state = [], action) => {
       } else {
         return state;
       }
-
+    case "ADD_COMMENT":
+      const newCommentObject = action.data;
+      return state.map(b =>
+        b.id !== newCommentObject.id ? b : newCommentObject
+      );
     case "INIT_BLOGS":
       return action.data;
     case "REMOVE_BLOG":
@@ -78,6 +93,16 @@ export const voteFor = object => {
     dispatch({
       type: "VOTE",
       data: updatedObject
+    });
+  };
+};
+
+export const submitComment = (comment, blog) => {
+  return async dispatch => {
+    const updatedBlog = await blogService.addComment(blog.id, comment);
+    dispatch({
+      type: "ADD_COMMENT",
+      data: updatedBlog
     });
   };
 };
