@@ -23,7 +23,7 @@ const OneBlogPage = props => {
     const comment = event.target.comment.value;
     event.target.comment.value = "";
     props.submitComment(comment, props.blog);
-    props.setNotification(`Your comment has been added`, 3);
+    props.setNotification("Your comment has been added", 3);
   };
 
   return (
