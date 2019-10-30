@@ -1,4 +1,5 @@
 import React from "react";
+import "./BlogForm.css";
 import { connect } from "react-redux";
 import { createBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
@@ -16,7 +17,7 @@ const BlogForm = props => {
     props.setNotification(`${title} was created`, 3);
   };
   return (
-    <div>
+    <div className="formBorder">
       <h3>Create a new blog</h3>
       <form onSubmit={addBlog}>
         <p>
